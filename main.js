@@ -37,34 +37,23 @@ var main = function(){
     // type can be compose, reply or forward
     console.log('api.dom.compose object:', compose, 'type is:', type );  // gmail.dom.compose object
 
-    // Get the parent div of the subject box
-    var subjectDiv = $( compose.$el[0] ).find( 'input[name=subjectbox]' ).parent().get(0);
+    // Quick hack to ensure the toolbar is loaded before we attempt to find it
+    setTimeout(function () {
+      // Get the parent div of the Discard button
+      var parentDiv = $( compose.$el[0] ).find( 'div[aria-label^=Discard]' ).parent().parent().get(0);
 
-    console.log('subjectbox parent:', subjectDiv );
+      console.log('Discard parent:', parentDiv );
 
-    // Create the timer div
-    var ss = {
-      id: 'compose-timer-1',
-      class: 'compose-timer',
-      'data-starttime': (new Date()).toJSON(),
-      css: {
-        float: 'right',
-        position: 'relative',
-        top: '-21px',
-        left: '50px',
-        'border-left': '1px solid #eceff1',
-        'font-weight': 'bold',
-        padding: '0px 6px'
-      }
-    };
-    var $timer = $('<div>', ss);
-    $timer.html('0:00');
+      // Create the timer div
+      var $timer = $('<div>', {
+        class: 'compose-timer',
+        'data-starttime': (new Date()).toJSON()
+      });
+      $timer.html('0:00');
 
-    // Create space for the timer div
-    $(subjectDiv).css('padding-right', '50px');
-
-    // Add the timer div to the subject box parent
-    $(subjectDiv).append($timer);
+      // Add the timer div to the relevant parent
+      $(parentDiv).prepend($timer);
+    },1000);
   });
 
   // Once loaded, ensure that all stopwatches are updated
