@@ -1,17 +1,28 @@
 {
   "name": "Gmail compose timer",
+  "short_name": "gmail-compose-timer",
   "version": "0.0.0.1",
   "description": "A stopwatch that starts when you start composing a new reply in Gmail.\n\nTime icon created by Freepik - Flaticon.",
   "content_scripts": [
     {
-      "matches": ["https://mail.google.com/*"],
-      "js": ["content.js"]
+        "matches": [ "*://mail.google.com/*" ],
+        "js": [
+            "content.js"
+        ],
+        "run_at": "document_start"
     }
   ],
   "web_accessible_resources": [
-    "jquery-1.10.2.min.js",
-    "gmail.js",
-    "main.js"
+    {
+      "resources": [
+        "jquery-1.10.2.min.js",
+        "gmail.js",
+        "main.js"
+      ],
+      "matches": [
+        "*://mail.google.com/*"
+      ]
+    }
   ],
   "icons": {
     "16": "images/timer16.png",
@@ -19,6 +30,6 @@
     "48": "images/timer48.png",
     "128": "images/timer128.png"
   },
-  "manifest_version": 2
+  "manifest_version": 3
 }
 

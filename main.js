@@ -1,14 +1,20 @@
-var gmail;
+// NOTE: Always use the latest version of gmail.js from
+// https://github.com/KartikTalwar/gmail.js
+// don't mess up too bad if we have several gmail.js-based
+// extensions loaded at the same time!
+window._gmailjs = window._gmailjs || new Gmail();
 
-function refresh(f) {
-  if( (/in/.test(document.readyState)) || (typeof Gmail === undefined) ) {
-    setTimeout('refresh(' + f + ')', 10);
-  } else {
-    f();
+// loader-code: wait until gmailjs has finished loading, before triggering actual extensiode-code.
+const loaderId = setInterval(() => {
+  if (!window._gmailjs) {
+      return;
   }
-}
 
-var main = function(){
+  clearInterval(loaderId);
+  startExtension(window._gmailjs);
+}, 100);
+
+function startExtension(gmail) {
   /*
     Use the provided 'jQuery' if possible, in order to avoid conflicts with
     other extensions that use $ for other purposes.
@@ -18,20 +24,10 @@ var main = function(){
       $ = localJQuery;
   } else if (typeof jQuery !== 'undefined') {
       $ = jQuery;
-  } else {
-      // try load jQuery through node.
-      try {
-          $ = require('jquery');
-      }
-      catch(err) {
-          // else leave $ undefined, which may be fine for some purposes.
-      }
   }
 
-  // NOTE: Always use the latest version of gmail.js from
-  // https://github.com/KartikTalwar/gmail.js
-  gmail = new Gmail();
-  console.log('Hello,', gmail.get.user_email())
+  // For debug
+  // console.log('Hello,', gmail.get.user_email())
 
   gmail.observe.on('compose', function(compose, type) {
     // type can be compose, reply or forward
@@ -58,6 +54,8 @@ var main = function(){
 
   // Once loaded, ensure that all stopwatches are updated
   gmail.observe.on('load', function() {
+    console.log('Gmail Compose Timer Loaded');
+
     setInterval(function () {
       $( '.compose-timer' ).each(function() {
         var startDateTime = new Date($( this ).data( 'starttime' ));
@@ -70,5 +68,3 @@ var main = function(){
     },100);
   });
 }
-
-refresh(main);

@@ -1,12 +1,12 @@
+"use strict";
 
-var j = document.createElement('script');
-j.src = chrome.extension.getURL('jquery-1.10.2.min.js');
-(document.head || document.documentElement).appendChild(j);
+function addScript(src) {
+    const script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src = chrome.runtime.getURL(src);
+    (document.body || document.head || document.documentElement).appendChild(script);
+}
 
-var g = document.createElement('script');
-g.src = chrome.extension.getURL('gmail.js');
-(document.head || document.documentElement).appendChild(g);
-
-var s = document.createElement('script');
-s.src = chrome.extension.getURL('main.js');
-(document.head || document.documentElement).appendChild(s);
+addScript("jquery-1.10.2.min.js");
+addScript("gmail.js");
+addScript("main.js");
